@@ -1,11 +1,21 @@
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
+model = None
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+
+def get_model():
+    global model
+
+    if model is None:
+        from sentence_transformers import SentenceTransformer
+        model = SentenceTransformer("all-MiniLM-L6-v2")
+
+    return model
 
 
 def calculate_semantic_similarity(resume_text, job_description):
+
+    model = get_model()
 
     resume_embedding = model.encode([resume_text])
 
