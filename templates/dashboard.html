@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ResumeScreen — Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-mark">
+            R
+        </div>
+
+        <span>
+            ResumeScreen
+        </span>
+
+    </div>
+
+
+    <a href="{{ url_for('home') }}"
+       class="nav-button">
+
+        + Upload resumes
+
+    </a>
+
+</nav>
+
+
+<main class="dashboard-page">
+
+
+    <section class="dashboard-header">
+
+        <div>
+
+            <span class="eyebrow">
+                SCREENING RESULTS
+            </span>
+
+            <h1>
+                Candidate dashboard
+            </h1>
+
+            <p>
+                Review and compare candidates based on
+                skills and semantic relevance.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    {% if candidates %}
+
+
+    <!-- Summary Cards -->
+
+    <section class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Total candidates
+            </span>
+
+            <strong>
+                {{ candidates|length }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Top score
+            </span>
+
+            <strong>
+                {{ candidates[0].final_score }}%
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Average score
+            </span>
+
+            <strong>
+
+                {% set total = namespace(value=0) %}
+
+                {% for candidate in candidates %}
+
+                    {% set total.value =
+                        total.value + candidate.final_score %}
+
+                {% endfor %}
+
+                {{ "%.1f"|format(
+                    total.value / candidates|length
+                ) }}%
+
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Strong matches
+            </span>
+
+            <strong>
+
+                {% set strong = namespace(value=0) %}
+
+                {% for candidate in candidates %}
+
+                    {% if candidate.final_score >= 80 %}
+
+                        {% set strong.value =
+                            strong.value + 1 %}
+
+                    {% endif %}
+
+                {% endfor %}
+
+                {{ strong.value }}
+
+            </strong>
+
+            <span class="stat-sub">
+                Score above 80%
+            </span>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- Candidate Ranking -->
+
+    <section class="candidate-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    Ranked candidates
+                </h2>
+
+                <p>
+                    Candidates are ranked by their overall screening score.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="candidate-table-wrapper">
+
+            <table class="candidate-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Rank</th>
+
+                        <th>Candidate</th>
+
+                        <th>Skill match</th>
+
+                        <th>Semantic match</th>
+
+                        <th>Missing skills</th>
+
+                        <th>Overall score</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for candidate in candidates %}
+
+                    <tr>
+
+
+                        <!-- Rank -->
+
+                        <td>
+
+                            <span class="rank">
+
+                                {% if candidate.rank == 1 %}
+
+                                    01
+
+                                {% elif candidate.rank == 2 %}
+
+                                    02
+
+                                {% elif candidate.rank == 3 %}
+
+                                    03
+
+                                {% else %}
+
+                                    {{ "%02d"|format(candidate.rank) }}
+
+                                {% endif %}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- Candidate -->
+
+                        <td>
+
+                            <div class="candidate-info">
+
+                                <div class="avatar">
+
+                                    {{ candidate.name[0] | upper }}
+
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        {{ candidate.name }}
+                                    </strong>
+
+                                    <span>
+                                        {{ candidate.email }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Skill Score -->
+
+                        <td>
+
+                            <div class="score-cell">
+
+                                <span>
+                                    {{ candidate.skill_score }}%
+                                </span>
+
+                                <div class="progress">
+
+                                    <div
+                                        class="progress-fill"
+                                        style="--score: {{ candidate.skill_score }}%;">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Semantic Score -->
+
+                        <td>
+
+                            <div class="score-cell">
+
+                                <span>
+                                    {{ candidate.semantic_score }}%
+                                </span>
+
+                                <div class="progress">
+
+                                    <div
+                                        class="progress-fill"
+                                        style="--score: {{ candidate.semantic_score }}%;">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Missing Skills -->
+
+                        <td>
+
+                            {% if candidate.missing_skills %}
+
+                                <span class="missing">
+
+                                    {{ candidate.missing_skills | join(", ") }}
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="complete">
+                                    All required skills
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Final Score -->
+
+                        <td>
+
+                            <span class="final-score">
+
+                                {{ candidate.final_score }}%
+
+                            </span>
+
+                        </td>
+
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    {% else %}
+
+
+    <!-- Empty Dashboard -->
+
+    <section class="empty-state">
+
+        <div class="empty-icon">
+            ↑
+        </div>
+
+        <h2>
+            No candidates yet
+        </h2>
+
+        <p>
+            Upload resumes and a job description to start screening.
+        </p>
+
+        <a href="{{ url_for('home') }}"
+           class="analyze-button">
+
+            Upload resumes →
+
+        </a>
+
+    </section>
+
+
+    {% endif %}
+
+
+</main>
+
+
+<footer>
+
+    <span>
+        ResumeScreen
+    </span>
+
+    <span>
+        AI Resume Screening System
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

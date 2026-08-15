@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ResumeScreen — AI Hiring</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="brand">
+        <div class="brand-mark">R</div>
+        <span>ResumeScreen</span>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="nav-link">
+        Dashboard
+    </a>
+
+</nav>
+
+
+<main class="upload-page">
+
+    <section class="hero">
+
+        <span class="eyebrow">
+            AI-POWERED RECRUITING
+        </span>
+
+        <h1>
+            Find the right candidate,<br>
+            <span>faster.</span>
+        </h1>
+
+        <p>
+            Upload resumes and a job description.
+            Our screening engine analyzes skills and relevance
+            to help you identify the strongest candidates.
+        </p>
+
+    </section>
+
+
+    <form method="POST"
+          enctype="multipart/form-data"
+          class="screening-form">
+
+
+        <div class="input-grid">
+
+
+            <!-- Resume Upload -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="step">
+                            STEP 01
+                        </span>
+
+                        <h2>Upload resumes</h2>
+
+                    </div>
+
+                    <span class="file-type">
+                        PDF
+                    </span>
+
+                </div>
+
+
+                <label for="resume"
+                       class="upload-box">
+
+                    <div class="upload-icon">
+                        ↑
+                    </div>
+
+                    <h3>
+                        Select candidate resumes
+                    </h3>
+
+                    <p>
+                        Choose one or multiple PDF files
+                    </p>
+
+                    <span class="browse">
+                        Browse files
+                    </span>
+
+                    <input
+                        type="file"
+                        id="resume"
+                        name="resume"
+                        multiple
+                        accept=".pdf"
+                        required
+                    >
+
+                </label>
+
+                <p class="upload-note">
+                    Multiple resumes can be selected at once.
+                </p>
+
+            </div>
+
+
+            <!-- Job Description -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="step">
+                            STEP 02
+                        </span>
+
+                        <h2>Job description</h2>
+
+                    </div>
+
+                </div>
+
+
+                <textarea
+                    id="job_description"
+                    name="job_description"
+                    class="job-input"
+                    placeholder="Paste the job description here..."
+                    required
+                ></textarea>
+
+
+                <div class="textarea-footer">
+
+                    <span>
+                        AI will compare candidates against this role.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-action">
+
+            <button type="submit"
+                    class="analyze-button">
+
+                Analyze candidates
+
+                <span>→</span>
+
+            </button>
+
+            <p>
+                Your resumes are securely processed for screening.
+            </p>
+
+        </div>
+
+    </form>
+
+</main>
+
+
+<footer>
+
+    <span>ResumeScreen</span>
+
+    <span>AI Resume Screening System</span>
+
+</footer>
+
+
+</body>
+
+</html>

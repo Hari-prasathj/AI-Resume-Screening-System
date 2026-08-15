@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Resume Screening System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>AI Resume Screening System</h1>
+
+        {% if message %}
+        <div class="success-message">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        <p class="subtitle">
+            Upload resumes and compare them with a Job Description using AI.
+        </p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <div class="form-group">
+
+                <label for="resume">
+                    Upload Resume(s)
+                </label>
+
+                <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    multiple
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="job_description">
+                    Job Description
+                </label>
+
+                <textarea
+                    id="job_description"
+                    name="job_description"
+                    rows="10"
+                    placeholder="Paste the Job Description here..."
+                    required
+                ></textarea>
+
+            </div>
+
+            <button type="submit">
+                Analyze Resumes
+            </button>
+
+        </form>
+
+
+        {% if uploaded_files %}
+
+        <div class="uploaded-section">
+
+            <h3>Uploaded Files</h3>
+
+            <ul>
+
+                {% for file in uploaded_files %}
+
+                <li>
+                    {{ file }}
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        {% endif %}
+
+
+        {% if candidates %}
+
+        <div class="results">
+
+            <h2>Candidate Ranking</h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Rank</th>
+                        <th>Candidate</th>
+                        <th>Email</th>
+                        <th>Skill Match</th>
+                        <th>Semantic Match</th>
+                        <th>Final Score</th>
+                        <th>Missing Skills</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for candidate in candidates %}
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                #{{ candidate.rank }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ candidate.name }}
+                        </td>
+
+                        <td>
+                            {{ candidate.email }}
+                        </td>
+
+                        <td>
+                            {{ candidate.skill_score }}%
+                        </td>
+
+                        <td>
+                            {{ candidate.semantic_score }}%
+                        </td>
+
+                        <td>
+                            <strong>
+                                {{ candidate.final_score }}%
+                            </strong>
+                        </td>
+
+                        <td>
+
+                            {% if candidate.missing_skills %}
+
+                                {{ candidate.missing_skills | join(", ") }}
+
+                            {% else %}
+
+                                None
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
